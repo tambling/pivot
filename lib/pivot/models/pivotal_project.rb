@@ -7,8 +7,8 @@ module Pivot
       @name = name
     end
 
-    def == comparison
-      return comparison.id == @id && comparison.name == @name
+    def == other
+      return other.id == @id && other.name == @name
     end
 
     def self.get_all
