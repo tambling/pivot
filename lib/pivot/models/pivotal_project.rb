@@ -1,5 +1,5 @@
 module Pivot
-  class PivotalProject
+  class PivotalProject < PivotalBase
     attr_reader :id, :name
 
     def initialize(id:, name:)
@@ -12,13 +12,13 @@ module Pivot
     end
 
     def self.get_all
-      PivotalClient.get_projects.map do |attributes|
+      client.get_projects.map do |attributes|
         from_attributes(attributes)
       end
     end
 
     def self.get_by_id id
-      attributes = PivotalClient.get_project(id)
+      attributes = client.get_project(id)
 
       from_attributes(attributes)
     end

@@ -17,11 +17,13 @@ RSpec.describe Pivot::PivotalProject do
   let (:raw_projects) { [raw_project] }
 
   before(:each) do
-    allow(Pivot::PivotalClient).to receive(:get_projects).and_return(raw_projects)
+    allow_any_instance_of(Pivot::PivotalClient).to receive(:get_projects).and_return(raw_projects)
 
-    allow(Pivot::PivotalClient).to receive(:get_project).
+    allow_any_instance_of(Pivot::PivotalClient).to receive(:get_project).
       with(project_id).
       and_return(raw_project)
+
+    Pivot::PivotalBase.client = Pivot::PivotalClient.new('token')
   end
 
   describe '.get_all' do
