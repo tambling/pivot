@@ -7,33 +7,27 @@ module Pivot
       @name = name
     end
 
-    def == other
-      return other.id == @id && other.name == @name
-    end
-
     def self.get_all
-      client.get_projects.map do |attributes|
-        from_attributes(attributes)
+      client.get_projects.map do |api_project|
+        self.from_api_project(api_project)
       end
     end
 
     def self.get_by_id id
-      attributes = client.get_project(id)
+      api_project = client.get_project(id)
 
-      from_attributes(attributes)
+      self.from_api_project(api_project)
     end
 
     def self.get_by_name name
       get_all.find {|project| project.name == name}
     end
     
-    def self.from_attributes attributes
-      id = attributes['id']
-      name = attributes['name']
+    def self.from_api_project api_project
+      id = api_project['id']
+      name = api_project['name']
 
       return self.new(id: id, name: name)
     end
-
-    private_class_method :from_attributes
   end
 end

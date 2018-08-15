@@ -1,25 +1,27 @@
 module Pivot
   class PivotalStory < PivotalBase
-    attr_reader :id, :name, :description
+    attr_reader :id, :name, :status, :description
 
-    def initialize (id:, name:, description: nil)
+    def initialize (id:, name:, status: nil, description: nil)
       @id = id
       @name = name
+      @status = status
       @description = description
     end
 
     def self.get_by_project_id project_id
-      client.get_stories(project_id).map do |attributes|
-        from_attributes(attributes)
+      client.get_stories(project_id).map do |api_story|
+        from_api_story(api_story)
       end
     end
 
-    def self.from_attributes attributes
-      id = attributes['id']
-      name = attributes['name']
-      description = attributes['description']
+    def self.from_api_story api_story
+      id = api_story['id']
+      name = api_story['name']
+      status = api_story['current_state']
+      description = api_story['description']
 
-      return self.new(id: id, name: name, description: description)
+      return self.new(id: id, name: name, status: status, description: description)
     end
   end
 end
