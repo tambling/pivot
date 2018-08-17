@@ -23,5 +23,9 @@ module Pivot
 
       return self.new(id: id, name: name, status: status, description: description)
     end
+
+    def to_github_issue
+      GitHub::Issue.new(title: @name, body: @description)
+    end
   end
 end

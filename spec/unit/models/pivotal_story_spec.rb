@@ -46,4 +46,16 @@ RSpec.describe Pivot::PivotalStory do
       expect(Pivot::PivotalStory.from_api_story(raw_story)).to match_story(story)
     end
   end
+
+  describe '#to_github_issue' do
+    it 'returns a GitHub::Issue with the right properties' do
+      title = 'Title'
+      body = 'Body'
+      story = Pivot::PivotalStory.new(id: 1, name: title, description: body)
+      issue = Pivot::GitHub::Issue.new(title: title, body: body)
+
+      expect(story.to_github_issue).to match_issue(issue)
+
+    end
+  end
 end
