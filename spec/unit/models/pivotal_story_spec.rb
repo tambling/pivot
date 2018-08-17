@@ -2,18 +2,28 @@ require 'spec_helper'
 
 RSpec.describe Pivot::PivotalStory do
   describe '.get_by_project_id' do
-    it 'returns an array of PivotalStories' do
-      project_id = 1 
-      raw_stories = [{"id" => 1, "name" => "Story #1"}, {"id" => 2, "name" => "Story #2"}]
-      Pivot::PivotalBase.client = Pivot::PivotalClient.new('token')
+    let(:project_id) { 1 }
+    let(:raw_stories)  { [{"id" => 1, "name" => "Story #1"}, {"id" => 2, "name" => "Story #2"}] }
 
-      allow_any_instance_of(Pivot::PivotalClient).
+    before(:each) do
+      client =  Pivot::PivotalClient.new('token') 
+      Pivot::PivotalBase.client = client
+
+      allow(client).
         to receive(:get_stories).
         with(project_id).
         and_return(raw_stories)
+    end
 
+    it 'returns an array of PivotalStories' do
       expect(Pivot::PivotalStory.get_by_project_id(project_id))
         .to all(be_a Pivot::PivotalStory)
+    end
+
+    it 'calls .from_api_story for each API object' do
+      expect(Pivot::PivotalStory).to receive(:from_api_story).exactly(raw_stories.length).times
+
+      Pivot::PivotalStory.get_by_project_id(project_id)
     end
   end
 

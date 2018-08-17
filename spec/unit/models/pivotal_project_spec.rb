@@ -4,6 +4,7 @@ RSpec.describe Pivot::PivotalProject do
   describe 'getters' do
     let (:project_id) { 1 }
     let (:project_name) { "Project #1" }
+    let (:project) { Pivot::PivotalProject.new(id: project_id, name: project_name) }
 
     before(:each) do
       raw_project = {
@@ -30,13 +31,13 @@ RSpec.describe Pivot::PivotalProject do
 
     describe '.get_by_id' do 
       it 'returns the right PivotalProject' do
-        expect(Pivot::PivotalProject.get_by_id(project_id).id).to eq(project_id)
+        expect(Pivot::PivotalProject.get_by_id(project_id)).to match_project(project)
       end
     end
 
     describe '.get_by_name' do
       it 'returns the right PivotalProject' do
-        expect(Pivot::PivotalProject.get_by_name(project_name).name).to eq(project_name)
+        expect(Pivot::PivotalProject.get_by_name(project_name)).to match_project(project)
       end
     end
   end
