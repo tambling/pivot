@@ -7,6 +7,10 @@ module Pivot
       @name = name
     end
 
+    def stories
+      PivotalStory.get_by_project_id @id
+    end
+
     def self.get_all
       client.get_projects.map do |api_project|
         self.from_api_project(api_project)

@@ -117,5 +117,14 @@ module Pivot
       require 'tty-which'
       TTY::Which.exist?(*args)
     end
+
+
+    def spin(beginning_message, ending_message)
+      require 'tty-spinner'
+      spinner = TTY::Spinner.new("[:spinner] #{beginning_message}")
+      spinner.auto_spin
+      yield
+      spinner.stop(ending_message)
+    end
   end
 end
