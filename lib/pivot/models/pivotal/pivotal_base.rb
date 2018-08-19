@@ -5,8 +5,8 @@ module Pivot
         @@client
       end
 
-      def client= new_client
-        @@client = new_client
+      def create_client token
+        @@client = PivotalClient.new(token)
       end
     end
   end

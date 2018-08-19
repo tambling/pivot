@@ -17,6 +17,14 @@ module Pivot
       end
     end
 
+    def self.get identifier
+      if identifier !~ /\D/
+        PivotalProject.get_by_id(identifier)
+      else
+        PivotalProject.get_by_name(identifier)
+      end
+    end
+
     def self.get_by_id id
       api_project = client.get_project(id)
 

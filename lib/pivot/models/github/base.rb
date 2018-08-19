@@ -8,16 +8,14 @@ module Pivot
           @@client
         end
 
-        def client= new_client
-          @@client = new_client
-        end
-
-        def check_client
-          raise InvalidGitHubClientError unless @@client.is_a? Octokit::Client
+        def create_client(login:, password:)
+          @@client = Octokit::Client.new(
+            login: login,
+            password: password,
+            per_page: 100
+          )
         end
       end
     end
   end
 end
-
-class InvalidGitHubClientError < StandardError; end

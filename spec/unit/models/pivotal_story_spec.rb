@@ -6,10 +6,9 @@ RSpec.describe Pivot::PivotalStory do
     let(:raw_stories)  { [{"id" => 1, "name" => "Story #1"}, {"id" => 2, "name" => "Story #2"}] }
 
     before(:each) do
-      client =  Pivot::PivotalClient.new('token') 
-      Pivot::PivotalBase.client = client
+      Pivot::PivotalBase.create_client('token')
 
-      allow(client).
+      allow_any_instance_of(Pivot::PivotalClient).
         to receive(:get_stories).
         with(project_id).
         and_return(raw_stories)

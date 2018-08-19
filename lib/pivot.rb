@@ -12,21 +12,30 @@ require 'tty-config'
 module Pivot
   class Application
     attr_accessor :pivotal_project_identifier, :github_repo_identifier
+    attr_reader :issues
 
     def initialize options 
       create_and_merge_config(options)
 
-      set_up_pivotal_client
-      set_up_github_client
+      PivotalBase.create_client @config.fetch(:pivotal_token)
+
+      GitHub::Base.create_client(
+        login: @config.fetch(:github_login), 
+        password: @config.fetch(:github_token)
+      )
     end
 
-    def transfer_stories!
-      get_pivotal_project
+    def prepare_issues
       GitHub::Issue.repo = @github_repo_identifier
+      project = PivotalProject.get(@pivotal_project_identifier)
 
-      stories = @project.stories
+      stories = project.stories
 
-      stories.map(&:to_github_issue).map(&:save!)
+      @issues = stories.map(&:to_github_issue)
+    end
+
+    def create_issues!
+      @issues.each(&:save!)
     end
 
     def all_project_names
@@ -48,29 +57,5 @@ module Pivot
 
       @config.merge(options)
     end
-
-    def set_up_pivotal_client
-      pivotal_client = PivotalClient.new(@config.fetch(:pivotal_token))
-      PivotalBase.client = pivotal_client
-    end
-
-    def set_up_github_client
-      github_client = Octokit::Client.new(
-        login: @config.fetch(:github_login), 
-        password: @config.fetch(:github_token),
-        per_page: 100
-      )
-
-      GitHub::Base.client = github_client
-    end
-
-    def get_pivotal_project
-      if @pivotal_project_identifier !~ /\D/
-        @project = PivotalProject.get_by_id(@pivotal_project_identifier)
-      else
-        @project = PivotalProject.get_by_name(@pivotal_project_identifier)
-      end
-    end
-
   end
 end

@@ -12,7 +12,7 @@ module Pivot
       end
 
       def self.get_all
-        @@client.repositories.map do |repo|
+        client.repositories.map do |repo|
           self.from_octokit_repo(repo)
         end
       end

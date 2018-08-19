@@ -11,7 +11,6 @@ RSpec.describe Pivot::GitHub::Issue do
   end
 
   describe '#save!' do
-    let(:client) { Octokit::Client.new }
     let(:title) { 'Issue' }
     let(:body) { 'Body' }
     let(:labels) { ['A', 'Label'] }
@@ -25,12 +24,12 @@ RSpec.describe Pivot::GitHub::Issue do
     ) }
 
     before(:each) do
-      Pivot::GitHub::Base.client = client
+      Pivot::GitHub::Base.create_client(login: 'user', password: 'password')
       Pivot::GitHub::Issue.repo = repo
     end
 
     it 'sends the right parameters to Octokit' do
-      expect(client).
+      expect_any_instance_of(Octokit::Client).
         to receive(:create_issue).
         with(
           repo, 
@@ -44,8 +43,7 @@ RSpec.describe Pivot::GitHub::Issue do
     end
 
     it "stores the created issue's number" do
-
-      allow(client).
+      allow_any_instance_of(Octokit::Client).
         to receive(:create_issue).
         with(
           repo, 

@@ -20,12 +20,31 @@ RSpec.describe Pivot::PivotalProject do
         with(project_id).
         and_return(raw_project)
 
-      Pivot::PivotalBase.client = Pivot::PivotalClient.new('token')
+      Pivot::PivotalBase.create_client('token')
     end
 
     describe '.get_all' do
       it 'returns an array of PivotalProjects' do
         expect(Pivot::PivotalProject.get_all).to all(be_a Pivot::PivotalProject)
+      end
+    end
+
+    describe '.get' do
+      it 'calls .get_by_id with a numeric identifier' do
+        id = '12345'
+
+        expect(Pivot::PivotalProject).to receive(:get_by_id).with(id)
+        
+        Pivot::PivotalProject.get(id)
+      end
+
+      it 'calls .get_by_name with a non-numeric identifier' do
+        id = 'project'
+
+        expect(Pivot::PivotalProject).to receive(:get_by_name).with(id)
+        
+        Pivot::PivotalProject.get(id)
+
       end
     end
 
@@ -51,6 +70,17 @@ RSpec.describe Pivot::PivotalProject do
       project = Pivot::PivotalProject.new(id: id, name: name)
 
       expect(Pivot::PivotalProject.from_api_project(raw_project)).to match_project(project)
+    end
+  end
+
+  describe '#stories' do
+    it 'calls PivotalStory.get_by_project_id' do
+      id = 1
+      name = "Project"
+
+      expect(Pivot::PivotalStory).to receive(:get_by_project_id).with(id)
+
+      Pivot::PivotalProject.new(id: id, name: name).stories
     end
   end
 end

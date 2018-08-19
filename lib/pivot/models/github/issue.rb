@@ -16,9 +16,7 @@ module Pivot
       end
 
       def save!
-        self.class.check_client
-
-        response = @@client.create_issue(self.class.repo, @title, @body, {labels: @labels, assignees: @assignees})
+        response = self.class.client.create_issue(self.class.repo, @title, @body, {labels: @labels, assignees: @assignees})
 
         @number = response[:number]
       end

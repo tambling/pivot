@@ -1,8 +1,12 @@
 require "bundler/setup"
-require "pivot"
 require "webmock/rspec"
+require "simplecov"
 
 Dir[File.dirname(__FILE__) + "/support/**/*.rb"].each { |f| require f }
+
+SimpleCov.start
+
+require "pivot"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
