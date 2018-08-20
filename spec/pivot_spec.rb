@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe Pivot do
-  it "has a version number" do
+  it 'has a version number' do
     expect(Pivot::VERSION).not_to be nil
   end
 
@@ -20,28 +20,28 @@ RSpec.describe Pivot do
       it 'sets the client for Pivotal::Base' do
         pivotal_token = 'token'
 
-        expect(Pivot::PivotalBase).to receive(:create_client).with(pivotal_token)
+        expect(Pivot::Pivotal::Base).to receive(:create_client).with(pivotal_token)
 
-        Pivot::Application.new({ pivotal_token: pivotal_token })
+        Pivot::Application.new(pivotal_token: pivotal_token)
       end
 
       it 'sets the client for GitHub::Base' do
         login = 'user'
         password = 'password'
 
-        expect(Pivot::GitHub::Base).
-          to receive(:create_client).with({login: login, password: password})
+        expect(Pivot::GitHub::Base)
+          .to receive(:create_client).with(login: login, password: password)
 
-        Pivot::Application.new({ github_login: login, github_token: password })
+        Pivot::Application.new(github_login: login, github_token: password)
       end
 
       it 'sets the closure threshold if provided' do
         closure_threshold = 'started'
-        Pivot::Application.new({ closure_threshold: closure_threshold })
+        Pivot::Application.new(closure_threshold: closure_threshold)
 
-        expect(Pivot::PivotalState.closure_threshold).to eq(closure_threshold)
+        expect(Pivot::Pivotal::State.closure_threshold).to eq(closure_threshold)
 
-        Pivot::PivotalState.closure_threshold = 'finished'
+        Pivot::Pivotal::State.closure_threshold = 'finished'
       end
 
       it 'gets and merges the configs' do
@@ -56,8 +56,8 @@ RSpec.describe Pivot do
     describe 'issues' do
       let(:identifier) { '12345' }
       let(:app) { Pivot::Application.new({}) }
-      let(:project) { Pivot::PivotalProject.new(id: 1, name: 'Project') } 
-      let(:story) { Pivot::PivotalStory.new(id: 1, name: 'Story', state: 'finished') }
+      let(:project) { Pivot::Pivotal::Project.new(id: 1, name: 'Project') }
+      let(:story) { Pivot::Pivotal::Story.new(id: 1, name: 'Story', state: 'finished') }
       let(:issue) { story.to_github_issue }
 
       before(:each) do
@@ -69,27 +69,27 @@ RSpec.describe Pivot do
 
       describe '#prepare_issues' do
         it 'gets the right Pivotal::Project' do
-          expect(Pivot::PivotalProject).
-            to receive(:get).with(identifier).and_return(project)
+          expect(Pivot::Pivotal::Project)
+            .to receive(:get).with(identifier).and_return(project)
 
           app.prepare_issues
         end
 
         it "sets the app's issues correctly" do
-          allow(Pivot::PivotalProject).
-            to receive(:get).with(identifier).and_return(project)
+          allow(Pivot::Pivotal::Project)
+            .to receive(:get).with(identifier).and_return(project)
 
           app.prepare_issues
 
-          expect(app.instance_variable_get(:@issues)).
-            to all(be_a(Pivot::GitHub::Issue))
+          expect(app.instance_variable_get(:@issues))
+            .to all(be_a(Pivot::GitHub::Issue))
         end
       end
 
       describe '#create_issues!' do
         it 'calls #save! on every issue' do
-          allow(Pivot::PivotalProject).
-            to receive(:get).with(identifier).and_return(project)
+          allow(Pivot::Pivotal::Project)
+            .to receive(:get).with(identifier).and_return(project)
 
           app.prepare_issues
 
@@ -103,9 +103,9 @@ RSpec.describe Pivot do
     describe '#all_project_names' do
       it 'returns the names of every available project' do
         project_name = 'Project'
-        project = Pivot::PivotalProject.new(id: 1, name: project_name)
+        project = Pivot::Pivotal::Project.new(id: 1, name: project_name)
 
-        allow(Pivot::PivotalProject).to receive(:get_all).and_return([project])
+        allow(Pivot::Pivotal::Project).to receive(:get_all).and_return([project])
 
         app = Pivot::Application.new({})
 

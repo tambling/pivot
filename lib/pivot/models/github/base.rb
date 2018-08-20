@@ -2,9 +2,12 @@ require 'octokit'
 
 module Pivot
   module GitHub
+    # GitHub::Issue and GitHub::Repo both inherit from GitHub::Base, which
+    # handles the client for them. @@client is available in all classes, and can
+    # be set from here.
     class Base
       class << self
-        def client 
+        def client
           @@client
         end
 

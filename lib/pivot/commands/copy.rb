@@ -3,9 +3,11 @@
 require_relative '../command'
 require_relative '../../pivot'
 
-
 module Pivot
   module Commands
+    # The main/only command. #initialize sets everything up (including creating
+    # the new issues in memory, whereas #execute actually creates the issues on
+    # GitHub.
     class Copy < Pivot::Command
       def initialize(options)
         @options = options.transform_keys(&:to_sym)
@@ -17,15 +19,16 @@ module Pivot
         @app.prepare_issues
       end
 
-      def execute(input: $stdin, output: $stdout)
+      def execute
         spin 'Transferring issues...', 'Done transferring issues!' do
           @app.create_issues!
         end
       end
 
       private
+
       def populate_or_select_project
-        if pivotal_project = @options.delete(:pivotal_project)
+        if (pivotal_project = @options.delete(:pivotal_project))
           @app.pivotal_project_identifier = pivotal_project
         else
           all_projects = []
@@ -38,7 +41,7 @@ module Pivot
       end
 
       def populate_or_select_repo
-        if github_repo = @options.delete(:github_repo)
+        if (github_repo = @options.delete(:github_repo))
           @app.github_repo_identifier = github_repo
         else
           all_repos = []

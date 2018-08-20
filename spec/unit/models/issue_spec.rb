@@ -13,15 +13,17 @@ RSpec.describe Pivot::GitHub::Issue do
   describe '#save!' do
     let(:title) { 'Issue' }
     let(:body) { 'Body' }
-    let(:labels) { ['A', 'Label'] }
+    let(:labels) { %w[A Label] }
     let(:assignees) { ['user'] }
 
-    let(:issue) { Pivot::GitHub::Issue.new(
-      title: title, 
-      body: body, 
-      labels: labels, 
-      assignees: assignees
-    ) }
+    let(:issue) do
+      Pivot::GitHub::Issue.new(
+        title: title,
+        body: body,
+        labels: labels,
+        assignees: assignees
+      )
+    end
 
     before(:each) do
       Pivot::GitHub::Base.create_client(login: 'user', password: 'password')
@@ -29,29 +31,29 @@ RSpec.describe Pivot::GitHub::Issue do
     end
 
     it 'sends the right parameters to Octokit' do
-      expect_any_instance_of(Octokit::Client).
-        to receive(:create_issue).
-        with(
-          repo, 
-          title, 
-          body, 
-          {labels: labels, assignees: assignees}
-      ).
-      and_return({ number: 1 })
+      expect_any_instance_of(Octokit::Client)
+        .to receive(:create_issue)
+        .with(
+          repo,
+          title,
+          body,
+          labels: labels, assignees: assignees
+        )
+        .and_return(number: 1)
 
       issue.save!
     end
 
     it "stores the created issue's number" do
-      allow_any_instance_of(Octokit::Client).
-        to receive(:create_issue).
-        with(
-          repo, 
-          title, 
-          body, 
-          {labels: labels, assignees: assignees}
-      ).
-      and_return({ number: 1 })
+      allow_any_instance_of(Octokit::Client)
+        .to receive(:create_issue)
+        .with(
+          repo,
+          title,
+          body,
+          labels: labels, assignees: assignees
+        )
+        .and_return(number: 1)
 
       issue.save!
 
@@ -60,17 +62,18 @@ RSpec.describe Pivot::GitHub::Issue do
 
     it "closes the issue if its status is 'closed'" do
       closed_issue = Pivot::GitHub::Issue.new(title: title, closed: true)
-      allow_any_instance_of(Octokit::Client).
-        to receive(:create_issue).
-        with(
-          repo, 
+      allow_any_instance_of(Octokit::Client)
+        .to receive(:create_issue)
+        .with(
+          repo,
           title,
           nil,
-          {labels: [], assignees: []}
-      ).
-      and_return({ number: 1 })
+          labels: [], assignees: []
+        )
+        .and_return(number: 1)
 
-      expect_any_instance_of(Octokit::Client).to receive(:close_issue).with(repo, 1)
+      expect_any_instance_of(Octokit::Client)
+        .to receive(:close_issue).with(repo, 1)
 
       closed_issue.save!
     end

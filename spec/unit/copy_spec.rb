@@ -4,17 +4,22 @@ require 'tty-prompt'
 require 'tty-spinner'
 
 RSpec.describe Pivot::Commands::Copy do
-  let(:project_name) { "Project"}
-  let(:repo_name) { "user/repo" }
-  let (:options) { {"pivotal_project" => project_name, "github_repo" => repo_name } }
+  let(:project_name) { 'Project' }
+  let(:repo_name) { 'user/repo' }
+  let(:options) do
+    {
+      'pivotal_project' => project_name,
+      'github_repo' => repo_name
+    }
+  end
 
-  before(:each ) do
+  before(:each) do
     allow_any_instance_of(TTY::Spinner).to receive(:auto_spin)
     allow_any_instance_of(TTY::Spinner).to receive(:stop)
   end
 
   describe '.new' do
-    let (:app) { Pivot::Application.new({})}
+    let(:app) { Pivot::Application.new({}) }
 
     before(:each) do
       allow(app).to receive(:prepare_issues)
@@ -23,9 +28,9 @@ RSpec.describe Pivot::Commands::Copy do
     end
 
     it 'creates a new Pivot::Application with the passed options' do
-      expect(Pivot::Application).
-        to receive(:new).with(options.transform_keys(&:to_sym)).
-        and_return(app)
+      expect(Pivot::Application)
+        .to receive(:new).with(options.transform_keys(&:to_sym))
+                         .and_return(app)
 
       Pivot::Commands::Copy.new(options)
     end
@@ -50,7 +55,7 @@ RSpec.describe Pivot::Commands::Copy do
       allow(Pivot::Application).to receive(:new).and_return(app)
       expect_any_instance_of(TTY::Prompt).to receive(:select)
 
-      Pivot::Commands::Copy.new({"github_repo" => repo_name})
+      Pivot::Commands::Copy.new('github_repo' => repo_name)
     end
 
     it 'sets the github_repo_identifier if it was provided' do
@@ -65,7 +70,7 @@ RSpec.describe Pivot::Commands::Copy do
       allow(Pivot::Application).to receive(:new).and_return(app)
       expect_any_instance_of(TTY::Prompt).to receive(:select)
 
-      Pivot::Commands::Copy.new({"pivotal_project" => project_name})
+      Pivot::Commands::Copy.new('pivotal_project' => project_name)
     end
   end
 
