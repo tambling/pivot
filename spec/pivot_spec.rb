@@ -35,6 +35,15 @@ RSpec.describe Pivot do
         Pivot::Application.new({ github_login: login, github_token: password })
       end
 
+      it 'sets the closure threshold if provided' do
+        closure_threshold = 'started'
+        Pivot::Application.new({ closure_threshold: closure_threshold })
+
+        expect(Pivot::PivotalState.closure_threshold).to eq(closure_threshold)
+
+        Pivot::PivotalState.closure_threshold = 'finished'
+      end
+
       it 'gets and merges the configs' do
         options = { pivotal_token: 'token' }
 

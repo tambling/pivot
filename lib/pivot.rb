@@ -18,6 +18,10 @@ module Pivot
     def initialize options 
       create_and_merge_config(options)
 
+      if closure_threshold = @config.fetch(:closure_threshold)
+        PivotalState.closure_threshold = closure_threshold
+      end
+
       PivotalBase.create_client @config.fetch(:pivotal_token)
 
       GitHub::Base.create_client(

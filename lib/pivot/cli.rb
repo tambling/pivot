@@ -24,10 +24,10 @@ module Pivot
     method_option :pivotal_token, type: :string
     method_option :github_login, type: :string
     method_option :github_token, type: :string
+    method_option :closure_threshold, type: :string
 
     # method_option :open_all, type: :boolean
     # method_option :close_all, type: :boolean
-    # method_option :close_threshold, type: :string
     # method_option :skip_assignees, type: :boolean
     # method_option :add_label, type: :array
     # method_option :skip_labels, type: :boolean

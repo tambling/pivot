@@ -3,14 +3,14 @@ module Pivot
     PIVOTAL_STATES = %w(unscheduled unstarted planned rejected started finished delivered accepted)
 
     class << self
-      def completion_threshold
-        @completion_threshold ||= 'finished'
+      def closure_threshold
+        @closure_threshold ||= 'finished'
       end
 
-      def completion_threshold= new_threshold
-        raise InvalidCompletionThresholdError unless PIVOTAL_STATES.include?(new_threshold)
+      def closure_threshold= new_threshold
+        raise InvalidClosureThresholdError unless PIVOTAL_STATES.include?(new_threshold)
 
-        @completion_threshold = new_threshold
+        @closure_threshold = new_threshold
       end
     end
 
@@ -23,9 +23,9 @@ module Pivot
     end
 
     def closed?
-      PIVOTAL_STATES.index(@state) >= PIVOTAL_STATES.index(self.class.completion_threshold)
+      PIVOTAL_STATES.index(@state) >= PIVOTAL_STATES.index(self.class.closure_threshold)
     end
   end
 end
 
-class InvalidCompletionThresholdError < StandardError; end
+class InvalidClosureThresholdError < StandardError; end

@@ -1,26 +1,26 @@
 require 'spec_helper'
 
 RSpec.describe Pivot::PivotalState do
-  describe '.completion_threshold' do
+  describe '.closure_threshold' do
     after(:each) do
-      Pivot::PivotalState.completion_threshold = 'finished'
+      Pivot::PivotalState.closure_threshold = 'finished'
 
     end
 
     it "returns 'finished' by default" do
-      expect(Pivot::PivotalState.completion_threshold).to eq('finished')
+      expect(Pivot::PivotalState.closure_threshold).to eq('finished')
     end
 
     it "can be set to a valid state" do
       threshold = 'started'
-      Pivot::PivotalState.completion_threshold = threshold
+      Pivot::PivotalState.closure_threshold = threshold
 
-      expect(Pivot::PivotalState.completion_threshold).to eq(threshold)
+      expect(Pivot::PivotalState.closure_threshold).to eq(threshold)
     end
 
     it "can't be set to an invalid state" do
-      expect{ Pivot::PivotalState.completion_threshold = 'scoffed' }.
-        to raise_error(InvalidCompletionThresholdError)
+      expect{ Pivot::PivotalState.closure_threshold = 'scoffed' }.
+        to raise_error(InvalidClosureThresholdError)
     end
   end
 
