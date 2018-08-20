@@ -48,7 +48,7 @@ RSpec.describe Pivot do
       let(:identifier) { '12345' }
       let(:app) { Pivot::Application.new({}) }
       let(:project) { Pivot::PivotalProject.new(id: 1, name: 'Project') } 
-      let(:story) { Pivot::PivotalStory.new(id: 1, name: 'Story') }
+      let(:story) { Pivot::PivotalStory.new(id: 1, name: 'Story', state: 'finished') }
       let(:issue) { story.to_github_issue }
 
       before(:each) do

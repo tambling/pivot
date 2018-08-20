@@ -58,6 +58,21 @@ RSpec.describe Pivot::GitHub::Issue do
       expect(issue.instance_variable_get(:@number)).to eq(1)
     end
 
-    it "closes the issue if its status is 'closed'" 
+    it "closes the issue if its status is 'closed'" do
+      closed_issue = Pivot::GitHub::Issue.new(title: title, closed: true)
+      allow_any_instance_of(Octokit::Client).
+        to receive(:create_issue).
+        with(
+          repo, 
+          title,
+          nil,
+          {labels: [], assignees: []}
+      ).
+      and_return({ number: 1 })
+
+      expect_any_instance_of(Octokit::Client).to receive(:close_issue).with(repo, 1)
+
+      closed_issue.save!
+    end
   end
 end

@@ -35,14 +35,14 @@ RSpec.describe Pivot::PivotalStory do
     it 'returns a PivotalStory with the right properties' do
       id = 1
       name = "Story"
-      status = "started"
+      state = "started"
       description = "A story"
       label = 'label'
 
       raw_story = { 
         "id" => id, 
         "name" => name,
-        "current_state" => status,
+        "current_state" => state,
         "description" => description,
         "labels" => [{'name' => label}]
       }
@@ -50,7 +50,7 @@ RSpec.describe Pivot::PivotalStory do
       story = Pivot::PivotalStory.new(
         id: id, 
         name: name, 
-        status: status, 
+        state: state, 
         description: description,
         labels: [label]
       )
@@ -64,8 +64,8 @@ RSpec.describe Pivot::PivotalStory do
       title = 'Title'
       body = 'Body'
       labels = ['label']
-      story = Pivot::PivotalStory.new(id: 1, name: title, description: body, labels: labels)
-      issue = Pivot::GitHub::Issue.new(title: title, body: body, labels: labels)
+      story = Pivot::PivotalStory.new(id: 1, name: title, description: body, labels: labels, state: 'finished')
+      issue = Pivot::GitHub::Issue.new(title: title, body: body, labels: labels, closed: true)
 
       expect(story.to_github_issue).to match_issue(issue)
     end
