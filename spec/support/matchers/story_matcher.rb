@@ -4,6 +4,7 @@ RSpec::Matchers.define :match_story do |expected|
       actual.id == expected.id &&
       actual.name == expected.name &&
       actual.status == expected.status &&
-      actual.description == expected.description
+      actual.description == expected.description &&
+      actual.labels == expected.labels
   end
 end

@@ -10,10 +10,11 @@ module Pivot
       def initialize(options)
         @options = options.transform_keys(&:to_sym)
         @app = Pivot::Application.new(@options)
-        @app.prepare_issues
 
         populate_or_select_project
         populate_or_select_repo
+
+        @app.prepare_issues
       end
 
       def execute(input: $stdin, output: $stdout)
