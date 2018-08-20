@@ -10,8 +10,11 @@ RSpec.describe Pivot do
       let(:config_file) { { foo: 'bar' } }
 
       before(:each) do
-        # TTY::Config is too good at finding local config files otherwise
-        allow(JSON).to receive(:parse).and_return(config_file)
+        config = TTY::Config.new(config_file)
+
+        allow(TTY::Config).to receive(:new).and_return(config)
+        allow(config).to receive(:persisted?).and_return(true)
+        allow(config).to receive(:read)
       end
 
       it 'sets the client for Pivotal::Base' do
@@ -37,7 +40,6 @@ RSpec.describe Pivot do
 
         app = Pivot::Application.new(options)
 
-        expect(app.instance_variable_get(:@config).fetch(:foo)).to eq('bar')
         expect(app.instance_variable_get(:@config).fetch(:foo)).to eq('bar')
       end
     end

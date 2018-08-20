@@ -53,7 +53,7 @@ module Pivot
       @config.extname = '.json'
       @config.append_path Dir.pwd
       @config.append_path Dir.home 
-      @config.read
+      @config.read if @config.persisted?
 
       @config.merge(options)
     end
