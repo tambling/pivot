@@ -21,6 +21,10 @@ module Pivot
       get "projects/#{project_id}/stories"
     end
 
+    def get_owners project_id, story_id
+      get "projects/#{project_id}/stories/#{story_id}/owners"
+    end
+
     private
     def get path
       url = "#{BASE_ROUTE}/#{path}"

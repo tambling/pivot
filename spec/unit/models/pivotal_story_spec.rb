@@ -5,8 +5,8 @@ RSpec.describe Pivot::PivotalStory do
     let(:project_id) { 1 }
     let(:raw_stories)  { 
       [
-        {"id" => 1, "name" => "Story #1", "labels" => []}, 
-        {"id" => 2, "name" => "Story #2", "labels" => []}
+        {"id" => 1, "name" => "Story #1", "labels" => [], "owner_ids" => []}, 
+        {"id" => 2, "name" => "Story #2", "labels" => [], "owner_ids" => []}
       ] 
     }
 
@@ -32,30 +32,41 @@ RSpec.describe Pivot::PivotalStory do
   end
 
   describe '.from_api_story' do
-    it 'returns a PivotalStory with the right properties' do
-      id = 1
-      name = "Story"
-      state = "started"
-      description = "A story"
-      label = 'label'
+      let(:id) { 1 }
+      let(:name) { "Story" }
+      let(:state) { "started" }
+      let(:description) { "A story" }
+      let(:label) { 'label' }
+      let(:owner) { Pivot::PivotalUser.new(id: 1, username: 'user') }
 
-      raw_story = { 
+      let(:raw_story) { { 
         "id" => id, 
         "name" => name,
         "current_state" => state,
         "description" => description,
-        "labels" => [{'name' => label}]
-      }
+        "labels" => [{'name' => label}],
+        "owner_ids" =>  [owner.id]
+      } }
 
+    it 'returns a PivotalStory with the right properties' do
       story = Pivot::PivotalStory.new(
         id: id, 
         name: name, 
         state: state, 
         description: description,
-        labels: [label]
+        labels: [label],
+        owners: [owner]
       )
 
       expect(Pivot::PivotalStory.from_api_story(raw_story)).to match_story(story)
+    end
+
+    it "gets the story's owners if they aren't in the cache" do
+      allow(Pivot::PivotalUser).to receive(:get_cached)
+
+      expect(Pivot::PivotalUser).to receive(:get_by_project_and_story_id)
+
+      Pivot::PivotalStory.from_api_story(raw_story)
     end
   end
 

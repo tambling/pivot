@@ -4,6 +4,7 @@ require "pivot/models/pivotal/pivotal_base"
 require "pivot/models/pivotal/pivotal_project"
 require "pivot/models/pivotal/pivotal_state"
 require "pivot/models/pivotal/pivotal_story"
+require "pivot/models/pivotal/pivotal_user"
 require "pivot/models/github/base"
 require "pivot/models/github/issue"
 require "pivot/models/github/repo"
@@ -21,6 +22,8 @@ module Pivot
       if closure_threshold = @config.fetch(:closure_threshold)
         PivotalState.closure_threshold = closure_threshold
       end
+
+      PivotalUser.pivotal_github_mappings = @config.fetch(:pivotal_github_mappings)
 
       PivotalBase.create_client @config.fetch(:pivotal_token)
 

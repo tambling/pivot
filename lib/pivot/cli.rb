@@ -25,6 +25,7 @@ module Pivot
     method_option :github_login, type: :string
     method_option :github_token, type: :string
     method_option :closure_threshold, type: :string
+    method_option :pivotal_github_mappings, type: :hash
 
     # method_option :open_all, type: :boolean
     # method_option :close_all, type: :boolean

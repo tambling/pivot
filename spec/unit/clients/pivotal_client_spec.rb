@@ -95,5 +95,33 @@ RSpec.describe Pivot::PivotalClient do
         expect(client.get_stories(project_id)).to all(be_a Hash)
       end
     end
+    
+    describe '#get_owners' do
+      let(:project_id) { 1 }
+      let(:story_id) { 2 }
+      let(:owners_url) { 
+        Addressable::Template.new("#{Pivot::PivotalClient::BASE_ROUTE}/projects/{project_id}/stories/{story_id}/owners") 
+      }
+
+      it "GETs the right URL" do
+        expected_url = owners_url.expand({project_id: project_id, story_id: story_id})
+        expect(RestClient).to receive(:get).with(expected_url, anything).and_return('[]')
+
+        client.get_owners(project_id, story_id)
+      end
+
+      it "has the right headers" do
+        expect(RestClient).to receive(:get).with(anything, headers).and_return('[]')
+
+        client.get_owners(project_id, story_id)
+      end
+
+      it "returns an array of hashes" do
+        stub_request(:get, owners_url).
+          to_return(body: fixture_file('owners'), status: 200)
+
+        expect(client.get_owners(project_id, story_id)).to all(be_a Hash)
+      end
+    end
   end
 end
