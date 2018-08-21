@@ -5,6 +5,10 @@
 A command-line utility for copying stories from Pivotal Tracker into GitHub issues. Transfers title and body (obviously), as well as labels, open/closed status, and owners/assignees (if asked nicely).
 
 ## Care and Feeding
+> _Post-Submission Update!_ 
+>
+> Run `bundle install` and `exe/pivot` from the root of the project to actually run the command, or `rspec` to run the test suite! Can't believe I forgot to mention that!
+
 `pivot` can take a number of configuration flags, and it also searches for `.pivot.json` in both the current directory and the user’s home directory. Each property can be defined as a flag, as a value in `.pivot.json`, or both (with the former overriding the latter).
 
 ### `pivotal-token`
